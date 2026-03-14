@@ -17,7 +17,9 @@ package.json (i.e., someone removed or added a dependency). If something unexpec
 always run npm install as a first step in troubleshooting. You can do it every single time, if you want, though.
 It might be overkill, but it also won't hurt anything. Whenever you clone the repo, though, you need to run it.
 
-Step #3: Start the server with the following command (this needs to be done every single time):
+Step #3: Start the server, in the project's root directory, with the following 
+command (this needs to be done every single time):
+
 node server.js
 
 Step #4: Open the application in a browser:
@@ -47,10 +49,14 @@ npm run test:unit
 npm run test:e2e
 npm run test:cucumber
 
-Unit tests are located in spec/validatorsSpec.js
+MAKE SURE YOU ARE RUNNING THESE FROM THE PROJECT'S ROOT DIRECTORY.
+
+Unit tests with Jasmine are located in spec/validatorsSpec.js
+There are a totoal of 22 Jasmine tests.
 Unit tests don't require the server to be running.
 ALL OTHER TESTS DO, THOUGH.
+Probably not a bad idea to just start the server regardles....
 
-E2E/Acceptance tests are located in tests/e2e.js
-BDD/Cucumber tests are located in features/auth.feature
+E2E/Acceptance tests are located in tests/e2e.js (there are a total of 8 of them)
+BDD/Cucumber tests are located in features/auth.feature (9 total scenarios, 49 total steps.)
 =========================================================================================================
