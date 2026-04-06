@@ -42,19 +42,35 @@ function requireLogin(req, res) {
     return true;
 }
 
-// temporary LLM function for iteration 2
-// this returns a context-aware reply based on previous messages
-function generateAssistantReply(history, newMessage) {
-    const previousUserMessages = history
-        .filter(msg => msg.role === 'user')
-        .map(msg => msg.content);
+//NEW — calls Ollama Phi-3 locally
+async function generateAssistantReply(history, newMessage) {
+    const messages = history.map(msg => ({
+        role: msg.role,
+        content: msg.content
+    }));
 
-    if (previousUserMessages.length > 0) {
-        const lastTopic = previousUserMessages[previousUserMessages.length - 1];
-        return `🐸 Frog Prompt remembers your earlier message: "${lastTopic}". Here is my response to "${newMessage}".`;
+    messages.push({
+        role: 'user',
+        content: newMessage
+    });
+
+    const response = await fetch('http://localhost:11434/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: 'phi3',
+            messages,
+            stream: false
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to connect to Ollama');
     }
 
-    return `🐸 Frog Prompt says: I received your message "${newMessage}".`;
+    const data = await response.json();
+
+    return data.message.content.trim();
 }
 
 // ── Auth Routes ───────────────────────────────────────────────────────────────
@@ -191,7 +207,7 @@ async function chatHandler(req, res) {
 
     conversation.messages.push(userMessage);
 
-    const assistantReply = generateAssistantReply(conversation.messages.slice(0, -1), message.trim());
+    const assistantReply = await generateAssistantReply(conversation.messages.slice(0, -1), message.trim());
 
     const assistantMessage = {
         role: 'assistant',

@@ -17,7 +17,6 @@
                 <li><a href="index.html">Home</a></li>
                 <li id="nav-signup"><a href="signUp.html">Sign Up</a></li>
                 <li id="nav-login"><a href="logIn.html">Login</a></li>
-                <li id="nav-chat"><a href="chat.html">Chat</a></li>
                 <li id="nav-logout" style="display:none;"><a href="#" onclick="logout()">Logout</a></li>
                 <li id="nav-greeting" style="color:white;font-size:20px;font-weight:500;padding:8px 15px;"></li>
             </ul>
@@ -30,25 +29,25 @@
 
             <!-- Search bar for past conversations -->
             <div class="chat-search-row">
-                <input type="text" id="historySearch" placeholder="Search history..." oninput="searchConversations()">
-                <button onclick="searchConversations()">Search</button>
+                <input type="text" id="historySearch" placeholder="Search history..." oninput="searchHistory()">
+                <button onclick="searchHistory()">Search</button>
             </div>
 
             <!-- Holds all saved conversations -->
-            <div id="conversationList" class="conversation-list"></div>
+            <div id="historyList" class="conversation-list"></div>
         </aside>
 
         <main class="chat-main">
             <div class="chat-header">
                 <h1>Ask Frog Prompt</h1>
-                <button id="newChatBtn" onclick="startNewConversation()">New Chat</button>
+                <button id="newChatBtn" type="button" onclick="newConversation()">New Chat</button>
             </div>
 
             <!-- Shows selected conversation messages -->
             <div id="chatWindow" class="chat-window"></div>
 
             <!-- Error message area -->
-            <div id="chatError" style="color:red; min-height:20px; margin-top:8px;"></div>
+            <div id="chatStatus" style="color:red; min-height:20px; margin-top:8px;"></div>
 
             <!-- Message input area -->
             <div class="chat-input-row">
@@ -71,7 +70,7 @@
                 }
             });
 
-            loadConversations();
+            loadHistory();
         });
     </script>
 </body>
