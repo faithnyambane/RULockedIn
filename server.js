@@ -1,7 +1,9 @@
 require('dotenv').config();
 
+const fetch = require('node-fetch');
+
 const express = require('express');
-const session = require('express-session');
+const session = require('express-session'); x
 const bcrypt = require('bcryptjs');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const path = require('path');
@@ -9,6 +11,8 @@ const { validateSignupInput, validateLoginInput } = require('./lib/validators');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434/api/chat';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'phi3';
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.use(express.json());
@@ -43,6 +47,7 @@ function requireLogin(req, res) {
 }
 
 //NEW — calls Ollama Phi-3 locally
+// calls Ollama phi3 and returns a real chat response
 async function generateAssistantReply(history, newMessage) {
     const messages = history.map(msg => ({
         role: msg.role,
@@ -54,21 +59,25 @@ async function generateAssistantReply(history, newMessage) {
         content: newMessage
     });
 
-    const response = await fetch('http://localhost:11434/api/chat', {
+    const response = await fetch(OLLAMA_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            model: 'phi3',
+            model: OLLAMA_MODEL,
             messages,
             stream: false
         })
     });
 
     if (!response.ok) {
-        throw new Error('Failed to connect to Ollama');
+        throw new Error(`Ollama request failed with status ${response.status}`);
     }
 
     const data = await response.json();
+
+    if (!data.message || !data.message.content) {
+        throw new Error('Ollama returned an unexpected response.');
+    }
 
     return data.message.content.trim();
 }
@@ -207,7 +216,20 @@ async function chatHandler(req, res) {
 
     conversation.messages.push(userMessage);
 
-    const assistantReply = await generateAssistantReply(conversation.messages.slice(0, -1), message.trim());
+    let assistantReply;
+
+    try {
+        assistantReply = await generateAssistantReply(
+            conversation.messages.slice(0, -1),
+            message.trim()
+        );
+    } catch (err) {
+        console.error('Ollama error:', err);
+        return res.json({
+            success: false,
+            message: 'The LLM failed to respond. Make sure Ollama is running and phi3 is installed.'
+        });
+    }
 
     const assistantMessage = {
         role: 'assistant',
@@ -353,9 +375,10 @@ async function startServer() {
         app.get('/api/conversations/search', searchConversationsHandler);
         app.get('/api/conversations/:id', getConversationByIdHandler);
 
-        app.listen(PORT, () => {
-            console.log(`Server running at http://localhost:${PORT}`);
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server running on port ${PORT}`);
         });
+
     } catch (err) {
         console.error('Failed to start server:', err);
         process.exit(1);
