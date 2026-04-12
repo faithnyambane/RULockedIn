@@ -35,6 +35,7 @@ const client = new MongoClient(process.env.MONGO_URI, {
 });
 
 let users; // userLoginData collection
+let chatLogs; //chatlogs collection
 
 // ── CAS helper ────────────────────────────────────────────────────────────────
 function httpsGet(url) {
@@ -64,14 +65,14 @@ async function signupHandler(req, res) {
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    await users.insertOne({
+    const result= await users.insertOne({
         name: name.trim(),
         email: email.toLowerCase(),
         password: hashed,
         createdAt: new Date()
     });
 
-    req.session.user = { name: name.trim(), email: email.toLowerCase() };
+    req.session.user = { name: name.trim(), email: email.toLowerCase(), id: result.insertedId};
     return res.json({ success: true });
 }
 
@@ -94,8 +95,11 @@ async function loginHandler(req, res) {
         return res.json({ success: false, message: 'Invalid email or password.' });
     }
 
-    req.session.user = { name: user.name, email: user.email };
-    return res.json({ success: true, name: user.name });
+    req.session.user = { name: user.name, email: user.email, id: user._id};
+    if(req.session.user){
+    console.log("logged in, session running!")
+    }
+    return res.json({ success: true, name: user.name,id: user._id});
 }
 
 // POST /api/logout
@@ -173,6 +177,7 @@ async function startServer() {
 
         const db = client.db('dbs');
         users = db.collection('userLoginData');
+        chatLogs=db.collection('chatLogs');
 
         app.post('/api/signup', signupHandler);
         app.post('/api/login', loginHandler);
@@ -189,6 +194,74 @@ async function startServer() {
         process.exit(1);
     }
 }
+
+
+//prompt for chat
+app.post("/api/chat", async (req, res) => {
+    try {
+        console.log("CHAT ROUTE VERSION A");
+        const userMessage = req.body.message;
+
+        if (!userMessage || !userMessage.trim()) {
+            return res.status(400).json({ error: "Message is required." });
+        }
+        const aiResponse = await fetch("https://ollama.com/api/generate", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "gpt-oss:120b",
+                prompt: userMessage,
+                stream: false
+            })
+        });
+        if (!aiResponse.ok) {
+            const errorText = await aiResponse.text();
+            console.error("Ollama API error:", aiResponse.status, errorText);
+            return res.status(aiResponse.status).json({
+                error: "AI request failed.",
+                details: errorText
+            });
+        }
+        const responseData = await aiResponse.json();
+        const reply = responseData.response || "No response";
+    
+        //only store chats if logged in
+        if (req.session.user) {
+        const userID= req.session.user.id;
+        console.log("logging user info ")
+        const result= await chatLogs.insertOne({
+            userMessage,
+            reply,
+            userID,
+            createdAt: new Date()
+        });
+        }
+
+        res.json({ reply });
+    } catch (err) {
+        console.error("Chat error:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+// get the user's past chats
+app.get("/api/userHistory", async (req, res) => {
+    console.log("getting chat history");
+    if (req.session.user) {
+    const userID= req.session.user.id;
+    const logs = await chatLogs.find({ userID }).toArray();
+    if (logs.length === 0) {
+    console.log("No chat history yet");
+    }
+    res.json({logs});
+}
+else {
+    return res.json([]);
+}
+});
 
 startServer();
 

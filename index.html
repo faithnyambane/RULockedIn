@@ -22,9 +22,10 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li id="nav-signup"><a href="signUp.html">Sign Up</a></li>
-                <li id="nav-login"><a href="logIn.html">Login</a></li>
+                <li id="chat-history" style="display:none;"><a href="chatHistory.html">Chat History</a></li>
+                <li id="nav-login" ><a href="logIn.html">Login</a></li>
                 <li id="nav-logout" style="display:none;"><a href="#" onclick="logout()">Logout</a></li>
-                <li id="nav-greeting" style="color:white;font-size:20px;font-weight:500;padding:8px 15px;"></li>
+                <li id="nav-greeting" style="display:none;"><a href="#"></a></li>
             </ul>
         </div>
     </nav>
@@ -38,21 +39,21 @@
             <h1>Welcome to Frog Prompt!</h1>
         </div>
 
-        <div class="thoughtCloud">
-            <img src="cloud2.png" width="125px">
-        </div>
+    <div class="frog">
+        <img src="frog2.png" alt="">
+        <div class="hoverText">...</div>
+    </div>
+</div>
 
-        <div class="frog">
-            <img src="frog2.png">
-
-            <div class="hoverText">
-            <h1>I wish I had a little hat...</h1>
-            </div>
-        </div>
-
+<div id="chatBox" class="chatBox"></div>
         <div class="prompt">
-            <input type="text" placeholder="Ask away..." style="background-color: rgb(211,249,188)"size="100">
+            <input type="text" placeholder="Ask away..." id="prompt" style="background-color: rgb(211,249,188)"size="100">
         </div> 
+         <div class="submitBtn">
+        <button onclick="submitPrompt()">
+        <img src="lilypad.png" width="79px">
+         </button>
+        </div>
 
 
     <script src="client.js"></script>

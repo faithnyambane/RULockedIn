@@ -7,8 +7,18 @@
 body {
     background-color: white;
     color: black;
-    font-family: "Fira Sans", 'Courier New', Courier, monospace;
     background-color: white;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+    cursor: url('baby_fly.png'), auto;
+}
+
+#nav-greeting {
+    color: white;
+    font-size: 20px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+    padding: 8px 15px;
 }
 
 nav {
@@ -18,16 +28,23 @@ nav {
     justify-content: space-between;
     padding: 20px 5%;
     background-color: #8cc099;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
 }
+
 nav ul {
     display: flex;
     list-style: none;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
 }
 
 nav ul li {
     padding: 8px 15px;
     border-radius: 10px;
     transition: 0.2s ease-in;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
 }
 
 nav ul li a {
@@ -36,69 +53,94 @@ nav ul li a {
     font-weight: 500;
     text-decoration: none;
     color: white;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
 }
 
 nav ul li:hover {
     background-color: green;
 }
+
 #myVideo {
-  position: fixed;
-  width:100%;
-  right: 0px;
-  bottom: -500px;
-  z-index:-100;
+    position: fixed;
+    width:100%;
+    right: 0px;
+    bottom: -500px;
+    z-index:-100;
 }
+
 .prompt {
-    font-size: 55px;
-    margin:auto;
-    width: 75%;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    border-style: solid;
+    border-color:rgb(211,249,188);
+    border-radius: 10px;
+    overflow-y: hidden;
+    left: 225px;
+    top: 650px;
+    font-size: 25px;
+    word-wrap: break-word;
+    max-width: 1000px;
+    min-height: 90px;
     color: rgb(211,249,188);
+    font-family: "Lucida Console", "Courier New", monospace;
+    border-width: 15px;
+    font-weight: bold;
+    bottom: 125px;
 }
 .prompt input {
+    font-size: 20px;
+    max-width: 1000px;
+    min-height: 90px;
     font-size: 45px;
-    border-radius: 10px;
-    margin:auto;
-    margin-top: 10px;
-    width: 1000px;
-    border: 3px solid green;
+    color: #446b40;;
+    border-style: solid;
+    border-color:rgb(161, 217, 124);
+    border-width: 15px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+}
+
+.submitBtn img {
+    position: fixed;
+    bottom: 60px;
+    left: 1150px;
 }
 
 .prompt input::placeholder {
     color: #13700b;
 }
-.thoughtCloud img{
-    display:block;
-    margin:auto;
-    margin-top: 120px;
-    margin-bottom:-75px;
-    width:725px;
-    margin-left: -75px;
-}
+
 .frog {
-    position: sticky;
+   display:fixed;
 }
-.frog img{
-    display:block;
+
+.frog img {
+    position: fixed;
     margin:auto;
-    margin-top:-50px;
-    margin-bottom:0px;
-    margin-left: 110px;
+    z-index:10;
+    bottom: 50px;
+    left: 30px;
     width: 200px;
 }
-.frog .hoverText {
-    position: absolute;
-    top: -80%;
-    left: 18%;
-    transform: translate(-50%, -50%);
-    
-    font-size: 10px;
-    display: none;
-    background: rgb(211,249,188);
-    color: rgb(17, 80, 32);
-    padding: 6px;
-}
-.frog:hover .hoverText {
-    display: block;
+.chatBox {
+    min-width: 0px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    align-items: center;
+    margin-left: 225px;
+    max-width: 1000px;
+    min-height: 0px;
+    background-color:#537c4f;
+    opacity: 0.9;
+    color: rgb(205, 231, 199);
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Lucida Console", "Courier New", monospace;
 }
 
 .sideNavigationBar {
@@ -113,7 +155,6 @@ nav ul li:hover {
     display: none;
 }
 
-
 .Title {
     display: flex;
     font-size: 45px;
@@ -121,15 +162,20 @@ nav ul li:hover {
     color: rgb(211,249,188);
     align-items:center;
     justify-content:center;
-}
-.button signUp{
-    width: 162px;
-    height: 35px;
-    border-radius: 12px;
-    color: green;
-    border-color: transparent;  
+    font-weight: bold;
+    font-family: "Lucida Console", "Courier New", monospace;
 }
 
+.button signUp {
+    position: fixed;
+    width: 162px;
+    height: 35px;
+    top: 400px;
+    border-radius: 12px;
+    color: green;
+    border-color: transparent;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
 
 /* Header content responsive */
 @media screen and (max-width: 980px) {
@@ -165,7 +211,6 @@ nav ul li:hover {
 }
 
 /* section */
-
 section .topic a {
     font-size: 25px;
     font-weight: 500;
@@ -185,7 +230,7 @@ section .topic a {
     border-radius: 12px;
     padding: 30px 10px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-    cursor: default;
+    cursor: url('baby_fly.png'), auto;
 }
 
 @media screen and (max-width: 600px) {

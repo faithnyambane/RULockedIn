@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="chatHistory.css">
+        <link rel="stylesheet" href="index.css">
+        <title>Sign Up – Frog Prompt</title>
+    </head>
+<body>
+    <nav>
+        <div class="heading">Frog Prompt</div>
+        <div class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li id="nav-logout" style="display:none;"><a href="#" onclick="logout()">Logout</a></li>
+                <li id="nav-greeting" style="color:white;font-size:20px;font-weight:500;padding:8px 15px;"></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="frogHistory">
+    <button class="frogButton" onclick="continueChat()">
+         <img src="frog2.png">
+    </button>
+    <div class="continueChat">
+    <h1>Press me to continue our chat!</h1>
+    </div>
+     <div class="thoughtCloudHistory">
+            <img src="cloud2.png" >
+    </div>
+
+    <div id="ask" class="ask"></div>
+    
+     <div id="reply" class="reply">
+</div>
+<div id="replies" class="replies"></div>    
+
+<div class="promptHistoryLabel">
+    <h2> Prompt History</h2>
+</div>
+<div class="responseHistoryLabel">
+    <h2>Responses</h2>
+</div>
+<div id="loadingPopUp" class="loadingPopUp">
+    <h1>Remembering Our Conversation.....</h1>
+    <img src="frog_loading.gif">
+</div>
+<div class="greyBackGround">
+<script src="client.js"></script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+let selectedPrompt = ""; 
 // ── Signup ────────────────────────────────────────────────────────────────────
 async function submitSignup() {
     const name     = document.getElementById('newUserName').value.trim();
@@ -66,6 +67,92 @@ async function logout() {
     await fetch('/api/logout', { method: 'POST' });
     window.location.href = '/logIn.html';
 }
+//--Submit Chat-------------------------------------------------------
+async function submitPrompt() {
+     console.log("Button clicked!");
+     const promptInput = document.getElementById('prompt');
+     const prompt = document.getElementById('prompt').value;
+     promptInput.value = "";
+     console.log(prompt);
+     const objectResponse = await fetch('/api/chat', {method: 'POST',headers: {'Content-Type': 'application/json'},body: JSON.stringify({message: prompt })});
+     const response = await objectResponse.json();
+     console.log("chat response:", response);
+     document.getElementById("chatBox").innerText = response.reply;
+}
+
+//Retrieve old chat
+async function continueChat() {
+   
+    console.log("Frog Button clicked!");
+    const loadingBox = document.getElementById("loadingPopUp");
+
+    //show the loading page while this works, only run if they slected a prompt
+
+    console.log(selectedPrompt);
+    if(selectedPrompt){
+        
+    loadingBox.style.display = "block";
+    const objectResponse = await fetch('/api/chat', {method: 'POST',headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: selectedPrompt })});
+
+    const response = await objectResponse.json();
+
+    // save for the next page
+    localStorage.setItem("savedReply", response.reply);
+    localStorage.setItem("savedPrompt", selectedPrompt);
+
+    // then redirect
+    window.location.href = "index.html";
+    }
+}
+
+//Retrieve the user chats and give to frontend
+async function retrieveUserChats() {
+    console.log("Retrieving Chats");
+
+    const objectUserLogs = await fetch('/api/userHistory');
+    const fullUserLogs = await objectUserLogs.json();
+    const userLogs = fullUserLogs.logs || [];
+
+    const asked = document.getElementById('ask');
+    const replies = document.getElementById('replies');
+
+    if (!asked || !replies) return;
+
+    asked.innerHTML = "";
+    replies.innerHTML = "";
+
+    for (let i = 0; i < userLogs.length; i++) {
+        const ask = document.createElement("div");
+        ask.className = "asked";
+        ask.textContent = userLogs[i].userMessage;
+        ask.dataset.index = i;
+
+        const reply = document.createElement("div");
+        reply.className = "reply";
+        reply.textContent = userLogs[i].reply;
+        reply.dataset.index = i;
+        reply.style.display = "none";
+
+        ask.addEventListener("click", function () {
+            const allReplies = document.querySelectorAll(".reply");
+            const wasOpen = reply.style.display === "block";
+
+            allReplies.forEach(function (r) {
+                r.style.display = "none";
+            });
+
+            if (!wasOpen) {
+                reply.style.display = "block";
+                selectedPrompt = userLogs[i].userMessage;
+            }
+        });
+
+        asked.appendChild(ask);
+        replies.appendChild(reply);
+    }
+}
+
 
 // ── Session-aware nav ─────────────────────────────────────────────────────────
 async function updateNav() {
@@ -77,16 +164,38 @@ async function updateNav() {
         const signupLink = document.getElementById('nav-signup');
         const logoutBtn  = document.getElementById('nav-logout');
         const greeting   = document.getElementById('nav-greeting');
+        const chatHistory= document.getElementById('chat-history');
 
         if (data.loggedIn) {
             if (loginLink)  loginLink.style.display  = 'none';
             if (signupLink) signupLink.style.display = 'none';
+            //show the logout button, the chat history, and the greeting on the logged in page 
             if (logoutBtn)  logoutBtn.style.display  = 'list-item';
-            if (greeting)   greeting.innerText        = `Hi, ${data.user.name}`;
+            if (chatHistory)  chatHistory.style.display  = 'list-item';
+            if (greeting)  greeting.style.display  = 'list-item';
+            if (greeting)   greeting.innerText  = `Hi, ${data.user.name}`;
+            console.log(data.user.name);
         } else {
             if (logoutBtn) logoutBtn.style.display = 'none';
         }
     } catch (_) { /* server not running, ignore */ }
 }
 
+document.addEventListener('DOMContentLoaded', retrieveUserChats);
 document.addEventListener('DOMContentLoaded', updateNav);
+
+window.addEventListener("DOMContentLoaded", () => {
+    const savedReply = localStorage.getItem("savedReply");
+    console.log("update with saved info");
+    // only run if data exists
+    if (!savedReply) return;
+
+    const chatBox = document.getElementById("chatBox");
+
+    if (chatBox) {
+        chatBox.innerText = savedReply;
+    }
+
+    // clear it so it doesn't run again
+    localStorage.removeItem("savedReply");
+});
