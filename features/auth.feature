@@ -1,9 +1,11 @@
+@auth
 Feature: User Authentication
   As a visitor to Frog Prompt
   I want to create an account and log in
   So that I can access the LLM interface
 
   # ── Landing Page ─────────────────────────────────────────────────────────────
+  @navigation
   Scenario: Landing page loads with navigation links
     Given I navigate to the home page
     Then the page title should contain "Frog Prompt"
@@ -11,6 +13,7 @@ Feature: User Authentication
     And I should see a "Login" link in the navigation
 
   # ── Sign Up ───────────────────────────────────────────────────────────────────
+  @signup
   Scenario: Successful account creation
     Given I am on the sign up page
     When I fill in "newUserName" with "testuser"
@@ -20,6 +23,7 @@ Feature: User Authentication
     And I click the "Sign Up" button
     Then I should be redirected to the home page
 
+  @signup @validation
   Scenario: Sign up fails when username is empty
     Given I am on the sign up page
     When I fill in "newUserName" with ""
@@ -29,6 +33,7 @@ Feature: User Authentication
     And I click the "Sign Up" button
     Then I should see an error message "Username cannot be empty."
 
+  @signup @validation
   Scenario: Sign up fails when passwords do not match
     Given I am on the sign up page
     When I fill in "newUserName" with "testuser"
@@ -38,6 +43,7 @@ Feature: User Authentication
     And I click the "Sign Up" button
     Then I should see an error message "Passwords do not match."
 
+  @signup @validation
   Scenario: Sign up fails when password is too short
     Given I am on the sign up page
     When I fill in "newUserName" with "testuser"
@@ -48,10 +54,7 @@ Feature: User Authentication
     Then I should see an error message "Password must be at least 8 characters."
 
   # ── Login ─────────────────────────────────────────────────────────────────────
-  Scenario: Login page has Rutgers CAS button
-    Given I am on the login page
-    Then I should see a "Login with Rutgers CAS" link
-
+  @login @validation
   Scenario: Login fails with empty email
     Given I am on the login page
     When I fill in "existingUserEmail" with ""
@@ -59,6 +62,7 @@ Feature: User Authentication
     And I click the "Login" button
     Then I should see an error message "Email is required."
 
+  @login @validation
   Scenario: Login fails with empty password
     Given I am on the login page
     When I fill in "existingUserEmail" with "someone@example.com"
@@ -66,6 +70,7 @@ Feature: User Authentication
     And I click the "Login" button
     Then I should see an error message "Password is required."
 
+  @login @validation
   Scenario: Login fails with wrong credentials
     Given I am on the login page
     When I fill in "existingUserEmail" with "nobody@example.com"

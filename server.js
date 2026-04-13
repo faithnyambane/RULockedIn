@@ -97,7 +97,7 @@ async function loginHandler(req, res) {
 
     req.session.user = { name: user.name, email: user.email, id: user._id};
     if(req.session.user){
-    console.log("logged in, session running!")
+    console.log("logged in, session running!");
     }
     return res.json({ success: true, name: user.name,id: user._id});
 }
@@ -231,7 +231,7 @@ app.post("/api/chat", async (req, res) => {
         //only store chats if logged in
         if (req.session.user) {
         const userID= req.session.user.id;
-        console.log("logging user info ")
+        console.log("logging user info ");
         const result= await chatLogs.insertOne({
             userMessage,
             reply,
