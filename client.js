@@ -1,4 +1,4 @@
-let selectedPrompt = ""; 
+
 // ── Signup ────────────────────────────────────────────────────────────────────
 async function submitSignup() {
     const name     = document.getElementById('newUserName').value.trim();
@@ -90,7 +90,7 @@ async function continueChat() {
 
     console.log(selectedPrompt);
     if(selectedPrompt){
-        
+
     loadingBox.style.display = "block";
     const objectResponse = await fetch('/api/chat', {method: 'POST',headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: selectedPrompt })});
@@ -107,13 +107,37 @@ async function continueChat() {
 }
 
 //Retrieve the user chats and give to frontend
+let selectedPrompt = "";
+let allUserLogs = [];
+
+// Retrieve the user chats and give to frontend
 async function retrieveUserChats() {
     console.log("Retrieving Chats");
 
     const objectUserLogs = await fetch('/api/userHistory');
     const fullUserLogs = await objectUserLogs.json();
-    const userLogs = fullUserLogs.logs || [];
+    allUserLogs = fullUserLogs.logs || [];
 
+    renderUserChats(allUserLogs);
+
+    const searchBar = document.getElementById("Search");
+    if (searchBar) {
+    searchBar.oninput = function () {
+        const searchText = searchBar.value.toLowerCase();
+
+        const filteredLogs = allUserLogs.filter(function (chat) {
+            const promptText = (chat.userMessage || "").toLowerCase();
+            const replyText = (chat.reply || "").toLowerCase();
+
+            return promptText.includes(searchText) || replyText.includes(searchText);
+        });
+
+        renderUserChats(filteredLogs);
+    };
+}
+}
+
+function renderUserChats(userLogs) {
     const asked = document.getElementById('ask');
     const replies = document.getElementById('replies');
 
@@ -163,17 +187,20 @@ async function updateNav() {
         const loginLink  = document.getElementById('nav-login');
         const signupLink = document.getElementById('nav-signup');
         const logoutBtn  = document.getElementById('nav-logout');
-        const greeting   = document.getElementById('nav-greeting');
+        const outfits   = document.getElementById('nav-outfits');
         const chatHistory= document.getElementById('chat-history');
+        const greeting   = document.getElementById('nav-greeting');
 
         if (data.loggedIn) {
+            console.log("Reaching logged in");
             if (loginLink)  loginLink.style.display  = 'none';
             if (signupLink) signupLink.style.display = 'none';
-            //show the logout button, the chat history, and the greeting on the logged in page 
+            //show the logout button, the chat history, outfits, and the greeting on the logged in page 
             if (logoutBtn)  logoutBtn.style.display  = 'list-item';
             if (chatHistory)  chatHistory.style.display  = 'list-item';
             if (greeting)  greeting.style.display  = 'list-item';
             if (greeting)   greeting.innerText  = `Hi, ${data.user.name}`;
+            if (outfits)  outfits.style.display  = 'list-item';
             console.log(data.user.name);
         } else {
             if (logoutBtn) logoutBtn.style.display = 'none';
@@ -183,6 +210,9 @@ async function updateNav() {
 
 document.addEventListener('DOMContentLoaded', retrieveUserChats);
 document.addEventListener('DOMContentLoaded', updateNav);
+document.addEventListener('DOMContentLoaded', function () {
+    retrieveUserChats();
+});
 
 window.addEventListener("DOMContentLoaded", () => {
     const savedReply = localStorage.getItem("savedReply");
