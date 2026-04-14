@@ -12,6 +12,7 @@
     "test:history": "cucumber-js --tags @history",
     "test:validation": "cucumber-js --tags @validation",
     "test:navigation": "cucumber-js --tags @navigation",
+    "test:search": "cucumber-js --tags @search",
     "test:e2e": "node tests/e2e.js",
     "lint": "eslint ."
   },

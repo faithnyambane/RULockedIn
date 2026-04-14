@@ -66,6 +66,10 @@ When('I type {string} into the chat input', async (text) => {
     await page.type('#prompt', text);
 });
 
+When('I type {string} into the search input', async (text) => {
+    await page.type('#Search', text);
+});
+
 When('I click the continue chat frog button without selecting a prompt', async () => {
     await page.click('.frogButton');
     await new Promise(r => setTimeout(r, 800));
@@ -132,6 +136,17 @@ Then('I should see the prompt history container', async () => {
 Then('I should see the continue chat frog button', async () => {
     const button = await page.$('.frogButton');
     assert.ok(button !== null, 'Expected to find continue chat frog button (.frogButton)');
+});
+
+Then('I should see the search input field', async () => {
+    const input = await page.$('#Search');
+    assert.ok(input !== null, 'Expected to find search input field #Search');
+});
+
+Then('the search input should contain {string}', async (expectedText) => {
+    const value = await page.$eval('#Search', el => el.value);
+    assert.strictEqual(value, expectedText,
+        `Expected search input to contain "${expectedText}", got "${value}"`);
 });
 
 Then('I should still be on the chat history page', async () => {
