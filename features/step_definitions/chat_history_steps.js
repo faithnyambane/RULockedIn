@@ -7,28 +7,11 @@
  *   2. Run acceptance tests:    npm run test:cucumber
  */
 
-const { Given, When, Then, Before, After } = require('@cucumber/cucumber');
-const puppeteer = require('puppeteer');
+const { Given, When, Then } = require('@cucumber/cucumber');
 const assert = require('assert');
+const state = require('../support/shared_state');
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
-
-let browser;
-let page;
-
-// ── Lifecycle ──────────────────────────────────────────────────────────────────
-
-Before(async () => {
-    browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    page = await browser.newPage();
-});
-
-After(async () => {
-    if (browser) await browser.close();
-});
 
 // ── Given ──────────────────────────────────────────────────────────────────────
 
@@ -36,10 +19,10 @@ Given('I am logged in as a new user', async () => {
     const email = `testuser_${Date.now()}@example.com`;
 
     // Navigate to home first to establish the session context
-    await page.goto(`${BASE_URL}/`, { waitUntil: 'domcontentloaded' });
+    await state.page.goto(`${BASE_URL}/`, { waitUntil: 'domcontentloaded' });
 
     // Sign up via the API directly — sets the session cookie automatically
-    await page.evaluate(async (email) => {
+    await state.page.evaluate(async (email) => {
         await fetch('/api/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -53,48 +36,48 @@ Given('I am logged in as a new user', async () => {
     }, email);
 
     // Reload so the page reflects the logged-in session state
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    await state.page.reload({ waitUntil: 'domcontentloaded' });
 });
 
 // ── When ───────────────────────────────────────────────────────────────────────
 
 When('I navigate to the chat history page', async () => {
-    await page.goto(`${BASE_URL}/chatHistory.html`, { waitUntil: 'domcontentloaded' });
+    await state.page.goto(`${BASE_URL}/chatHistory.html`, { waitUntil: 'domcontentloaded' });
 });
 
 When('I type {string} into the chat input', async (text) => {
-    await page.type('#prompt', text);
+    await state.page.type('#prompt', text);
 });
 
 When('I type {string} into the search input', async (text) => {
-    await page.type('#Search', text);
+    await state.page.type('#Search', text);
 });
 
 When('I click the continue chat frog button without selecting a prompt', async () => {
-    await page.click('.frogButton');
+    await state.page.click('.frogButton');
     await new Promise(r => setTimeout(r, 800));
 });
 
 // ── Then ───────────────────────────────────────────────────────────────────────
 
 Then('I should see the chat input field', async () => {
-    const input = await page.$('#prompt');
+    const input = await state.page.$('#prompt');
     assert.ok(input !== null, 'Expected to find chat input field #prompt');
 });
 
 Then('I should see the chat submit button', async () => {
-    const button = await page.$('.submitBtn button');
+    const button = await state.page.$('.submitBtn button');
     assert.ok(button !== null, 'Expected to find chat submit button');
 });
 
 Then('the chat input should contain {string}', async (expectedText) => {
-    const value = await page.$eval('#prompt', el => el.value);
+    const value = await state.page.$eval('#prompt', el => el.value);
     assert.strictEqual(value, expectedText,
         `Expected chat input to contain "${expectedText}", got "${value}"`);
 });
 
 Then('the {string} navigation link should be hidden', async (linkText) => {
-    const isVisible = await page.evaluate((text) => {
+    const isVisible = await state.page.evaluate((text) => {
         const links = document.querySelectorAll('nav a');
         for (const link of links) {
             if (link.innerText.trim() === text) {
@@ -113,7 +96,7 @@ Then('the {string} navigation link should be visible', async (linkText) => {
     // Wait for the async updateNav() call to complete
     await new Promise(r => setTimeout(r, 800));
 
-    const isVisible = await page.evaluate((text) => {
+    const isVisible = await state.page.evaluate((text) => {
         const links = document.querySelectorAll('nav a');
         for (const link of links) {
             if (link.innerText.trim() === text) {
@@ -129,28 +112,28 @@ Then('the {string} navigation link should be visible', async (linkText) => {
 });
 
 Then('I should see the prompt history container', async () => {
-    const container = await page.$('#ask');
+    const container = await state.page.$('#ask');
     assert.ok(container !== null, 'Expected to find prompt history container #ask');
 });
 
 Then('I should see the continue chat frog button', async () => {
-    const button = await page.$('.frogButton');
+    const button = await state.page.$('.frogButton');
     assert.ok(button !== null, 'Expected to find continue chat frog button (.frogButton)');
 });
 
 Then('I should see the search input field', async () => {
-    const input = await page.$('#Search');
+    const input = await state.page.$('#Search');
     assert.ok(input !== null, 'Expected to find search input field #Search');
 });
 
 Then('the search input should contain {string}', async (expectedText) => {
-    const value = await page.$eval('#Search', el => el.value);
+    const value = await state.page.$eval('#Search', el => el.value);
     assert.strictEqual(value, expectedText,
         `Expected search input to contain "${expectedText}", got "${value}"`);
 });
 
 Then('I should still be on the chat history page', async () => {
-    const url = page.url();
+    const url = state.page.url();
     assert.ok(url.includes('chatHistory.html'),
         `Expected to remain on chat history page, but URL was "${url}"`);
 });
