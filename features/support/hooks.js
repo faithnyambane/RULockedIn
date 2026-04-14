@@ -13,7 +13,14 @@ const state = require('./shared_state');
 Before(async () => {
     state.browser = await puppeteer.launch({
         headless: false,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--password-store=basic',
+            '--disable-features=PasswordImport,PasswordManagerOnboarding,PasswordLeakDetection,AutofillEnableAccountWalletStorage',
+            '--disable-save-password-bubble',
+            '--disable-infobars'
+        ]
     });
     state.page = await state.browser.newPage();
 });
