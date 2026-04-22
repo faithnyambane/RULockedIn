@@ -4,10 +4,7 @@ import { defineConfig } from "eslint/config";
 
 export default defineConfig([
   {
-    ignores: [
-      "node_modules/**",
-      "package-lock.json",
-    ],
+    ignores: ["node_modules/**", "package-lock.json"],
   },
   {
     files: ["server.js", "lib/**/*.js"],
@@ -15,18 +12,12 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: {
       globals: {
-        require: "readonly",
-        module: "readonly",
-        exports: "readonly",
-        process: "readonly",
-        __dirname: "readonly",
-        console: "readonly",
-        setTimeout: "readonly",
+        require: "readonly", module: "readonly", exports: "readonly",
+        process: "readonly", __dirname: "readonly", console: "readonly",
+        setTimeout: "readonly", fetch: "readonly",
       },
     },
-    rules: {
-      "no-unused-vars": "warn",
-    },
+    rules: { "no-unused-vars": "warn" },
   },
   {
     files: ["client.js"],
@@ -34,15 +25,11 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: {
       globals: {
-        document: "readonly",
-        window: "readonly",
-        fetch: "readonly",
-        console: "readonly",
+        document: "readonly", window: "readonly", fetch: "readonly",
+        console: "readonly", alert: "readonly",
       },
     },
-    rules: {
-      "no-unused-vars": "warn",
-    },
+    rules: { "no-unused-vars": "warn", "no-empty": "warn" },
   },
   {
     files: ["spec/**/*.js", "tests/**/*.js", "features/**/*.js"],
@@ -50,25 +37,14 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: {
       globals: {
-        require: "readonly",
-        module: "readonly",
-        process: "readonly",
-        console: "readonly",
-        setTimeout: "readonly",
-        describe: "readonly",
-        it: "readonly",
-        expect: "readonly",
-        beforeAll: "readonly",
-        afterAll: "readonly",
-        beforeEach: "readonly",
-        afterEach: "readonly",
-        document: "readonly",
-        window: "readonly",
+        require: "readonly", module: "readonly", process: "readonly",
+        console: "readonly", setTimeout: "readonly", describe: "readonly",
+        it: "readonly", expect: "readonly", beforeAll: "readonly",
+        afterAll: "readonly", beforeEach: "readonly", afterEach: "readonly",
+        document: "readonly", window: "readonly", jasmine: "readonly",
       },
     },
-    rules: {
-      "no-unused-vars": "warn",
-    },
+    rules: { "no-unused-vars": "warn" },
   },
   {
     files: ["**/*.json"],
