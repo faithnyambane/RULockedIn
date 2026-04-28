@@ -1,0 +1,22 @@
+# RULockedIn Change Log
+
+## Iteration 1
+
+Feature 1: User signup with input validation. [commit aba6cfa](https://github.com/faithnyambane/RULockedIn/commit/aba6cfa)
+Feature 2: User login and logout with session management. [commit aba6cfa](https://github.com/faithnyambane/RULockedIn/commit/aba6cfa)
+
+## Iteration 2
+
+Feature 3: Chat with LLM as guest or logged-in user. [commit d7b49fd](https://github.com/faithnyambane/RULockedIn/commit/d7b49fd)
+Feature 4: Save conversation history to MongoDB. [commit d7b49fd](https://github.com/faithnyambane/RULockedIn/commit/d7b49fd)
+Feature 5: Continue a past conversation. [commit d7b49fd](https://github.com/faithnyambane/RULockedIn/commit/d7b49fd)
+Feature 6: Search conversation history by keyword. [commit 6c2d892](https://github.com/faithnyambane/RULockedIn/commit/6c2d892)
+Feature 7: Cucumber.js acceptance tests and Puppeteer E2E tests. [PR 1](https://github.com/faithnyambane/RULockedIn/pull/1)
+
+## Iteration 3
+
+Feature 8: Select backend LLM model via dropdown UI. [commit b1a05b8](https://github.com/faithnyambane/RULockedIn/commit/b1a05b8)
+Feature 9: Local model support via Ollama (list, select, and pull models). [commit b1a05b8](https://github.com/faithnyambane/RULockedIn/commit/b1a05b8)
+Feature 10: Side-by-side model comparison with separate conversation history. [commit b1a05b8](https://github.com/faithnyambane/RULockedIn/commit/b1a05b8)
+Feature 11: Iteration 3 unit tests (Jasmine). [commit 38214eb](https://github.com/faithnyambane/RULockedIn/commit/38214eb)
+Feature 12: ESLint CI/CD pipeline fix for Node.js 20. [commit a5e62ae](https://github.com/faithnyambane/RULockedIn/commit/a5e62ae)
