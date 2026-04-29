@@ -15,8 +15,8 @@ Feature 7: Cucumber.js acceptance tests and Puppeteer E2E tests. [PR 1](https://
 
 ## Iteration 3
 
-Feature 8: Select backend LLM model via dropdown UI. [commit b1a05b8](https://github.com/faithnyambane/RULockedIn/commit/b1a05b8)
-Feature 9: Local model support via Ollama (list, select, and pull models). [commit b1a05b8](https://github.com/faithnyambane/RULockedIn/commit/b1a05b8)
-Feature 10: Side-by-side model comparison with separate conversation history. [commit b1a05b8](https://github.com/faithnyambane/RULockedIn/commit/b1a05b8)
-Feature 11: Iteration 3 unit tests (Jasmine). [commit 38214eb](https://github.com/faithnyambane/RULockedIn/commit/38214eb)
-Feature 12: ESLint CI/CD pipeline fix for Node.js 20. [commit a5e62ae](https://github.com/faithnyambane/RULockedIn/commit/a5e62ae)
+Feature 8: Select backend LLM model via dropdown UI. [PR #4](https://github.com/faithnyambane/RULockedIn/pull/4)
+Feature 9: Local model support via Ollama. [PR #4](https://github.com/faithnyambane/RULockedIn/pull/4)
+Feature 10: Side-by-side model comparison. [PR #4](https://github.com/faithnyambane/RULockedIn/pull/4)
+Feature 11: Iteration 3 unit tests (Jasmine). [PR #5](https://github.com/faithnyambane/RULockedIn/pull/5)
+Feature 12: ESLint CI/CD pipeline fix. [commit a5e62ae](https://github.com/faithnyambane/RULockedIn/commit/a5e62ae)
